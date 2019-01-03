@@ -1,10 +1,8 @@
-package com.example.mortrza.myadvertismentdispaly;
+package com.example.mortrza.myadvertismentdispaly.ADV;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,45 +12,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.example.mortrza.myadvertismentdispaly.ADV.AgahiAdapter;
+import com.example.mortrza.myadvertismentdispaly.R;
 
-import static android.os.Build.VERSION.SDK_INT;
-
-public class MainActivity extends AppCompatActivity
+public class DetailActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        setTitle("آگهی ها");
-
-        if (SDK_INT >17){
-            getWindow().peekDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        }
-
-/*
-        dbHandler dbh = new dbHandler(this);
-        dbh.open();
-        Toast.makeText(getApplicationContext(),""+dbh.Like_count(),Toast.LENGTH_SHORT).show();
-        dbh.close();
-*/
-
-
-
-        dbHandler dbh = new dbHandler(this);
-        dbh.open();
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler);
-        AgahiAdapter agahiAdapter = new AgahiAdapter(this,dbh.display());
-        recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
-        recyclerView.setAdapter(agahiAdapter);
-        dbh.close();
-
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -62,7 +42,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.setItemIconTintList(null);
     }
 
     @Override
@@ -74,11 +53,11 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-/*
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.detail, menu);
         return true;
     }
 
@@ -96,16 +75,24 @@ public class MainActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
-*/
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_like_list) {
+        if (id == R.id.nav_camera) {
             // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
         } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
 
         }
 
