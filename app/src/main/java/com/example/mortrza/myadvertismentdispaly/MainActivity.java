@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.example.mortrza.myadvertismentdispaly.ADV.AgahiAdapter;
 import com.example.mortrza.myadvertismentdispaly.ADV.ListFragment;
+import com.example.mortrza.myadvertismentdispaly.SETTING.Setting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -183,7 +184,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    /*
+
         @Override
         public boolean onCreateOptionsMenu(Menu menu) {
             // Inflate the menu; this adds items to the action bar if it is present.
@@ -199,13 +200,18 @@ public class MainActivity extends AppCompatActivity
             int id = item.getItemId();
 
             //noinspection SimplifiableIfStatement
-            if (id == R.id.action_settings) {
-                return true;
+            if (id == R.id.action_search) {
+                //Toast.makeText(getApplicationContext(),"search",Toast.LENGTH_LONG).show();
+                //search();
+            }else if (id == R.id.action_bookmark) {
+                //Toast.makeText(getApplicationContext(),"Bookmark",Toast.LENGTH_LONG).show();
+                DefaultTab=0;
+                init();
             }
 
             return super.onOptionsItemSelected(item);
         }
-    */
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -216,6 +222,8 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_manage) {
 
+            Setting st = new Setting(MainActivity.this);
+            st.Setting();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
