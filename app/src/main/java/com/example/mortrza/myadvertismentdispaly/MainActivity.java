@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import static android.os.Build.VERSION.SDK_INT;
 
@@ -30,6 +31,12 @@ public class MainActivity extends AppCompatActivity
         if (SDK_INT >17){
             getWindow().peekDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
+
+
+        dbHandler dbh = new dbHandler(this);
+        dbh.open();
+        Toast.makeText(getApplicationContext(),""+dbh.Like_count(),Toast.LENGTH_SHORT).show();
+        dbh.close();
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
