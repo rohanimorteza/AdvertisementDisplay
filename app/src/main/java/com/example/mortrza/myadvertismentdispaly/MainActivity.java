@@ -1,8 +1,14 @@
 package com.example.mortrza.myadvertismentdispaly;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -17,12 +23,17 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.mortrza.myadvertismentdispaly.ADV.AgahiAdapter;
+import com.example.mortrza.myadvertismentdispaly.ADV.ListFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.os.Build.VERSION.SDK_INT;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static int DefaultTab=1000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +55,7 @@ public class MainActivity extends AppCompatActivity
 */
 
 
-
+/*
         dbHandler dbh = new dbHandler(this);
         dbh.open();
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler);
@@ -52,6 +63,14 @@ public class MainActivity extends AppCompatActivity
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         recyclerView.setAdapter(agahiAdapter);
         dbh.close();
+*/
+
+        dbHandler dbh = new dbHandler(this);
+        dbh.open();
+        DefaultTab=dbh.Cat_count()-1;
+        dbh.close();
+
+        init();
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -64,6 +83,88 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
     }
+
+
+    private  void init(){
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        if(viewPager != null){
+            setupViewPager(viewPager);
+        }
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+    }
+
+    private void setupViewPager(ViewPager viewPager){
+
+        int catCount=0;
+        dbHandler dbh = new dbHandler(this);
+        dbh.open();
+        catCount=dbh.Cat_count();
+        FragmentAdapter fragmentAdapter = new FragmentAdapter(getSupportFragmentManager());
+        ListFragment[] listFragments = new ListFragment[catCount];
+
+        for( int i=0  ; i<catCount  ; i++   ){
+            Bundle bundle = new Bundle();
+            int m= i+1;
+            bundle.putString("FRG",m+"");
+            listFragments[i] = new ListFragment();
+            listFragments[i].setArguments(bundle);
+
+            fragmentAdapter.addFragment(listFragments[i],dbh.get_Cat_Name(m));
+
+        }
+
+        dbh.close();
+
+        /*ListFragment car = new ListFragment();
+        Bundle bundlecar = new Bundle();
+        bundlecar.putString("FRG","CAR");
+        car.setArguments(bundlecar);
+        ListFragment home = new ListFragment();
+        Bundle bundleHome = new Bundle();
+        bundleHome.putString("FRG","HOME");
+        home.setArguments(bundleHome);
+        fragmentAdapter.addFragment(car , "خودرو");
+        fragmentAdapter.addFragment(home , "املاک");*/
+
+        viewPager.setAdapter(fragmentAdapter);
+        viewPager.computeScroll();
+
+        viewPager.setCurrentItem(DefaultTab);
+
+    }
+
+    static class FragmentAdapter extends FragmentPagerAdapter {
+
+        private List<Fragment> fragmentList = new ArrayList<>();
+        private List<String> titles = new ArrayList<>();
+
+        public FragmentAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        public void addFragment(Fragment fragment,String title){
+            fragmentList.add(fragment);
+            titles.add(title);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return fragmentList.size();
+        }
+
+        @Nullable
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return titles.get(position);
+        }
+    }
+
 
     @Override
     public void onBackPressed() {
