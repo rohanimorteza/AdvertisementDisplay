@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.example.mortrza.myadvertismentdispaly.DetailActivity;
+import com.example.mortrza.myadvertismentdispaly.MainActivity;
 import com.example.mortrza.myadvertismentdispaly.R;
 
 import java.util.List;
@@ -66,7 +68,7 @@ public class AgahiAdapter extends RecyclerView.Adapter<AgahiAdapter.AgahiViewHol
 
                 Intent i = new Intent(context,DetailActivity.class);
                 i.putExtra("ID",agahiList.get(position).getId());
-                //MainActivity.DefaultTab = Integer.parseInt(agahiList.get(position).getCat())-1;
+                MainActivity.DefaultTab = Integer.parseInt(agahiList.get(position).getCat())-1;
                 context.startActivity(i);
 
 
