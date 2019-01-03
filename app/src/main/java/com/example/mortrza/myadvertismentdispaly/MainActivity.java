@@ -1,5 +1,6 @@
 package com.example.mortrza.myadvertismentdispaly;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -9,8 +10,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,6 +25,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.mortrza.myadvertismentdispaly.ADV.AgahiAdapter;
@@ -33,7 +39,7 @@ import static android.os.Build.VERSION.SDK_INT;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    Dialog dialog;
     public static int DefaultTab=1000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,9 +189,64 @@ public class MainActivity extends AppCompatActivity
         init();
     }
 
+    public void search(){
+        View alertLayout = LayoutInflater.from(this).inflate(R.layout.alert_search,null);
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setView(alertLayout);
+        refreshSearch(alertLayout);
 
 
-        @Override
+        //////////////////
+        dialog = alert.create();
+        dialog.show();
+    }
+    private void refreshSearch(View m){
+
+
+
+        final RecyclerView recyclerView = (RecyclerView) m.findViewById(R.id.rec_alert_search);
+        final EditText edt = (EditText) m.findViewById(R.id.edt_alert_search);
+        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        final dbHandler dbh = new dbHandler(MainActivity.this);
+        dbh.open();
+        if(edt.getText().toString().equals("")){
+            AgahiAdapter agahiAdapter = new AgahiAdapter(MainActivity.this,dbh.display());
+            dbh.close();
+            recyclerView.setAdapter(agahiAdapter);
+        }
+
+        edt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                dbh.open();
+
+                if(dbh.isDisplay(edt.getText().toString())){
+                    //recyclerView.setVisibility(View.VISIBLE);
+
+                    AgahiAdapter agahiAdapter = new AgahiAdapter(MainActivity.this,dbh.display(edt.getText().toString()));
+                    recyclerView.setAdapter(agahiAdapter);
+                }else {
+                    //recyclerView.setVisibility(View.INVISIBLE);
+                    recyclerView.setAdapter(null);
+                }
+                dbh.close();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+    }
+
+
+    @Override
         public boolean onCreateOptionsMenu(Menu menu) {
             // Inflate the menu; this adds items to the action bar if it is present.
             getMenuInflater().inflate(R.menu.main, menu);
@@ -201,8 +262,7 @@ public class MainActivity extends AppCompatActivity
 
             //noinspection SimplifiableIfStatement
             if (id == R.id.action_search) {
-                //Toast.makeText(getApplicationContext(),"search",Toast.LENGTH_LONG).show();
-                //search();
+                search();
             }else if (id == R.id.action_bookmark) {
                 //Toast.makeText(getApplicationContext(),"Bookmark",Toast.LENGTH_LONG).show();
                 DefaultTab=0;
