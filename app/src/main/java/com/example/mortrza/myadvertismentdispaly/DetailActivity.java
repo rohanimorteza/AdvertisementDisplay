@@ -1,5 +1,6 @@
 package com.example.mortrza.myadvertismentdispaly;
 
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mortrza.myadvertismentdispaly.ADV.Agahi;
 import com.example.mortrza.myadvertismentdispaly.R;
@@ -31,6 +33,7 @@ public class DetailActivity extends AppCompatActivity
     Bundle b;
     Agahi agahi;
     FloatingActionButton fab;
+    String shareBody = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,8 @@ public class DetailActivity extends AppCompatActivity
         title.setText(agahi.getTitle());
 
         des.setText(agahi.getDescription());
+
+        shareBody = title+"\n"+des;
 
         if(sd.GetFONT()==1){
             des.setTypeface(tf_yekan);
@@ -139,6 +144,33 @@ public class DetailActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.detail, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_share) {
+
+
+            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+            sharingIntent.setType("text/plain");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "اشتراک با");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+            startActivity(Intent.createChooser(sharingIntent, "اشتراک با ..."));
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
